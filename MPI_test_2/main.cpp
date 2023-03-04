@@ -6,6 +6,9 @@
 
 using namespace std;
 
+#define SIZE_ROW 3000 
+#define SIZE_COL 3000 
+
 int main()
 {
 
@@ -25,12 +28,28 @@ int main()
     int name_len;
     MPI_Get_processor_name(processor_name, &name_len);
 
+    if (world_rank == 0)
+    {
+        int* a = new int [SIZE_ROW * SIZE_COL];
+        int* b = new int [SIZE_ROW * SIZE_COL];
+
+        for (int i = 0; i < SIZE_ROW; i++)
+            MPI_Send(a, SIZE_ROW, MPI_INT, i, MPI_ANY_TAG, MPI_COMM_WORLD);
+        
+    }
+    else
+    {
+        int* a = new int [SIZE_COL];
+        int* b = new int [SIZE_COL];
+
+        MPI_Recv(a, SIZE_ROW, MPI_INT, MPI_ANY_SOURCE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+
     // Print off a hello world message
     printf("Hello world from processor %s, rank %d out of %d processors\n",
         processor_name, world_rank, world_size);
 
     // Finalize the MPI environment.
     MPI_Finalize();
-
     return 0;
 }
