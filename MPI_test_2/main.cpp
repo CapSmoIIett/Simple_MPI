@@ -42,7 +42,9 @@ int main()
         int* a = new int [SIZE_COL];
         int* b = new int [SIZE_COL];
 
-        MPI_Recv(a, SIZE_ROW, MPI_INT, MPI_ANY_SOURCE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Status status;
+
+        MPI_Recv(a, SIZE_ROW, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
     }
 
     // Print off a hello world message
